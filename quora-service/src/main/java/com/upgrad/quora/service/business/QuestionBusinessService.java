@@ -5,6 +5,7 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,5 +48,10 @@ public class QuestionBusinessService {
         }
 
         return questionDao.getAllQuestions(accessToken);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity editQuestionContent(final String content, final String questionId, final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+      return null;
     }
 }
