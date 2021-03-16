@@ -6,6 +6,8 @@ import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.upgrad.quora.service.exception.UserNotFoundException;
+
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -21,14 +23,16 @@ public class UserService {
 
     @Transactional
     public UserEntity getUserByUsername(String username) {
-        UserEntity userEntity =  userDao.getUserByUsername(username) ;
+        UserEntity userEntity = userDao.getUserByUsername(username);
         return userEntity;
     }
 
+    @Transactional
     public UserEntity getUserByEmail(String email) {
         UserEntity userEntity = userDao.getUserByEmail(email);
         return userEntity;
     }
+
     public UserEntity signupUser(UserEntity user) {
         String[] array = passwordCryptographyProvider.encrypt(user.getPassword());
         user.setPassword(array[1]);
@@ -47,7 +51,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserAuthEntity  saveLoginInfo(UserAuthEntity userAuthEntity, String password) {
+    public UserAuthEntity saveLoginInfo(UserAuthEntity userAuthEntity, String password) {
         JwtTokenProvider tokenProvider = new JwtTokenProvider(password);
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime expiryTime = currentTime.plusHours(8);
@@ -63,5 +67,14 @@ public class UserService {
 
         return userDao.saveLoginInfo(userAuthEntity);
 
+    }
+
+    public UserEntity getUserByUuid(String uuid) throws UserNotFoundException {
+        UserEntity user = userDao.getUserByUuid(uuid);
+        if (user == null) {
+            throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");
+        }
+
+        return user;
     }
 }

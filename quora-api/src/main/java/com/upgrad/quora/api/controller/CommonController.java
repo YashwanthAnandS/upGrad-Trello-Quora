@@ -1,6 +1,7 @@
 package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.UserDetailsResponse;
+import com.upgrad.quora.service.business.AuthTokenService;
 import com.upgrad.quora.service.business.CommonControllerService;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
@@ -12,26 +13,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class CommonController {
     @Autowired
     CommonControllerService service;
 
-    @GetMapping(path = "userprofile/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDetailsResponse> getUserDetails(@PathVariable(name = "userId") final String uuid,
-                                                              @RequestHeader(name = "authorization") final String authToken) throws AuthorizationFailedException, UserNotFoundException {
-        String[] stringArray = authToken.split("Bearer ");
-        String accessToken = stringArray[1];
+    @Autowired
+    AuthTokenService authTokenService;
 
-        service.checkAuthToken(accessToken);
-        UserEntity userEntity = service.getUserDetails(uuid);
 
-        UserDetailsResponse response = new UserDetailsResponse().firstName(userEntity.getFirstName()).
-                lastName(userEntity.getLastName()).userName(userEntity.getUserName()).
-                emailAddress(userEntity.getEmail()).country(userEntity.getCountry()).
-                aboutMe(userEntity.getAboutMe()).dob(userEntity.getDob()).
-                contactNumber(userEntity.getContactNumber());
+    // this method fetches user details for the given user UUID
+    @RequestMapping(path = "userprofile/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UserDetailsResponse> fetchUserDetails(@PathVariable("userId") String uuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
 
-        return new ResponseEntity<UserDetailsResponse>(response, HttpStatus.OK);
+        UserEntity user = service.getUserDetails(uuid, authorization);
+
+          UserDetailsResponse userDetailsResponse = new UserDetailsResponse().firstName(user.getFirstName()).lastName(user.getLastName())
+                .userName(user.getUserName()).emailAddress(user.getEmail()).contactNumber(user.getContactNumber())
+                .country(user.getCountry()).aboutMe(user.getAboutMe()).dob(user.getDob());
+        return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
+
     }
 }

@@ -16,6 +16,7 @@ public class UserAuthEntity {
     @Column(name = "uuid")
     private String uuid;
 
+    // user can have multiple login sessions
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
