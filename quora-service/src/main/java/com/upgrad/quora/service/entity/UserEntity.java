@@ -6,11 +6,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "USERS")
+//create dynamic queries to fetch data from the 'quora' database
 @NamedQueries({@NamedQuery(name = "UserEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email"),
         @NamedQuery(name = "UserName", query = "SELECT u FROM UserEntity u WHERE u.userName = :username"),
         @NamedQuery(name = "UserId", query = "SELECT u FROM UserEntity u WHERE u.UUID = :uuid")
 })
 public class UserEntity {
+    //Define Entity class Fields which mapped into 'quora' database
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -71,10 +73,13 @@ public class UserEntity {
     private List<UserAuthEntity> authTokens;
 
 
+    //Define Default constructor
     public UserEntity() {
 
     }
 
+
+    //Define parameterized constructor
     public UserEntity(@Size(max = 30) String firstName, @Size(max = 30) String lastName, @Size(max = 30) String userName, @Size(max = 50) String email, @Size(max = 255) String password, @Size(max = 30) String country, @Size(max = 50) String aboutMe, @Size(max = 30) String dob, @Size(max = 30) String role, @Size(max = 30) String contactNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -88,6 +93,7 @@ public class UserEntity {
         this.contactNumber = contactNumber;
     }
 
+    //Define Getters and Setters
     public int getId() {
         return Id;
     }

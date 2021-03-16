@@ -3,14 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.AuthTokenDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
-import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +13,8 @@ public class AuthTokenService {
     @Autowired
     AuthTokenDao authTokenDao;
 
-    private Map<String, String> error;
 
     // This method checks existing auth token, and then signs out the user if the auth token is found. If the auth token is not found, it displays an error message.
-
     @Transactional
     public UserEntity checkAuthToken(String authToken) throws SignOutRestrictedException {
 

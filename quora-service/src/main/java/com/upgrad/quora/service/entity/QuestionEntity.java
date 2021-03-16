@@ -13,12 +13,14 @@ import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "question")
+//create dynamic queries to fetch data from the 'quora' database
 @NamedQueries({
         @NamedQuery(name = "allQuestions", query = "select q from QuestionEntity q"),
         @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid=:uuid"),
 })
 public class QuestionEntity implements Serializable {
 
+    //Define Entity class Fields which mapped into 'quora' database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -40,6 +42,7 @@ public class QuestionEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    //Define Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -90,6 +93,7 @@ public class QuestionEntity implements Serializable {
         return new HashCodeBuilder().append(this).hashCode();
     }
 
+    //Define toString method
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

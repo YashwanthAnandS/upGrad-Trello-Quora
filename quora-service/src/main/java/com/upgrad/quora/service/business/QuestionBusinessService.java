@@ -22,6 +22,7 @@ public class QuestionBusinessService {
     @Autowired
     private QuestionDao questionDao;
 
+    //This service class method creates a question in 'quora' database by all users
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity createQuestion(final QuestionEntity questionEntity, final String accessToken) throws AuthorizationFailedException {
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
@@ -36,6 +37,7 @@ public class QuestionBusinessService {
         return questionDao.createQuestion(questionEntity);
     }
 
+    //This service class methods fetches all the questions from the database which is created by all the users
     @Transactional(propagation = Propagation.REQUIRED)
     public List<QuestionEntity> getAllQuestions(final String accessToken) throws AuthorizationFailedException {
 
@@ -50,6 +52,7 @@ public class QuestionBusinessService {
         return questionDao.getAllQuestions(accessToken);
     }
 
+    //This service class method updates the question content by only owner of that question
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity editQuestionContent(final String content, final String questionId, final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
 

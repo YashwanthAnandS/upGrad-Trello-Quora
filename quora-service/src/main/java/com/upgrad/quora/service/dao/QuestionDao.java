@@ -14,15 +14,18 @@ public class QuestionDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //This Dao method creates a question in database
     public QuestionEntity createQuestion(QuestionEntity questionEntity) {
         entityManager.persist(questionEntity);
         return questionEntity;
     }
 
+    //This Dao method fetch all the questions from the database
     public List<QuestionEntity> getAllQuestions(final String accessToken) {
         return entityManager.createNamedQuery("allQuestions", QuestionEntity.class).getResultList();
     }
 
+    //This Dao method fetch question from their questionId from the database
     public QuestionEntity getQuestionById(final String uuid) {
         try {
             return entityManager.createNamedQuery("questionByUuid", QuestionEntity.class).setParameter("uuid", uuid).getSingleResult();
@@ -31,6 +34,7 @@ public class QuestionDao {
         }
     }
 
+    //This Dao method updates the question content in the database
     public QuestionEntity editQuestionContent(QuestionEntity questionEntity) {
         entityManager.merge(questionEntity);
         return questionEntity;

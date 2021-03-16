@@ -13,6 +13,7 @@ public class AdminDao {
     @PersistenceContext
     EntityManager entityManager;
 
+    //this dao method deletes a particular users by admin only
     public UserEntity deleteUser(String uuid) {
         try {
             UserEntity userEntity = entityManager.createNamedQuery("UserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
