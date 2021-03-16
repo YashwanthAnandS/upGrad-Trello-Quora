@@ -36,7 +36,16 @@ public class QuestionBusinessService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<QuestionEntity> getAllQuestions(final String accessToken) {
-        return null;
+    public List<QuestionEntity> getAllQuestions(final String accessToken) throws AuthorizationFailedException {
+
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if (userAuthTokenEntity.getLogoutTime() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
+        }
+
+        return questionDao.getAllQuestions(accessToken);
     }
 }

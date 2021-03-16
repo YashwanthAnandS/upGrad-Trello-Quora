@@ -43,7 +43,7 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String authorization) {
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
         final List<QuestionEntity> questionEntityList = questionBusinessService.getAllQuestions(authorization);
         List<QuestionDetailsResponse> questionResponseList = new ArrayList<QuestionDetailsResponse>();
         for (int i = 0; i < questionEntityList.size(); i++) {
