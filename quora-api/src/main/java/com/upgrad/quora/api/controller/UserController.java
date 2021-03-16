@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
 
 import java.util.Base64;
 import java.util.UUID;
@@ -91,8 +92,14 @@ public class UserController {
                 UserAuthEntity authEntity = new UserAuthEntity();
                 authEntity.setUuid(userWithUsername.getUUID());
                 authEntity.setUser(userWithUsername);
-                UserEntity userEntity = userService.saveLoginInfo(authEntity, password);
-                return new ResponseEntity<SigninResponse>(new SigninResponse().id(userEntity.getUUID()).message("SIGNED IN SUCCESSFULLY"), HttpStatus.OK);
+                UserAuthEntity userAuthEntity = userService.saveLoginInfo(authEntity, password);
+                UserEntity userEntity = userAuthEntity.getUser();
+
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("access-token", "Bearer " + userAuthEntity.getAccessToken());
+
+                return new ResponseEntity<SigninResponse>(new SigninResponse().id(userEntity.getUUID()).message("SIGNED IN SUCCESSFULLY"), headers, HttpStatus.OK);
             } else {
                 throw new AuthenticationFailedException("ATH-002", "Password failed");
             }
@@ -102,7 +109,10 @@ public class UserController {
     @PostMapping(path = "user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignoutResponse> signOut(@RequestHeader(name = "authorization") final String authToken)
             throws SignOutRestrictedException {
-        UserEntity userEntity = authTokenService.checkAuthToken(authToken);
+        String[] stringArray = authToken.split("Bearer ");
+        String accessToken = stringArray[1];
+
+        UserEntity userEntity = authTokenService.checkAuthToken(accessToken);
         return new ResponseEntity<SignoutResponse>(new SignoutResponse().id(userEntity.getUUID()).message("SIGNED OUT SUCCESSFULLY"), HttpStatus.OK);
     }
 }
