@@ -20,21 +20,6 @@ public class AdminBuisnessService {
     @Autowired
     AdminDao adminDao;
 
-    // Checks validity of authorization token.
-    @Transactional
-    public UserEntity checkAuthToken(String authToken) throws AuthorizationFailedException {
-
-        UserAuthEntity userAuthEntity = authTokenDao.checkAuthToken(authToken);
-        if (userAuthEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else {
-            if (userAuthEntity.getLogoutTime() == null) {
-                return userAuthEntity.getUser();
-            } else {
-                throw new AuthorizationFailedException("ATHR-002", "User is signed out");
-            }
-        }
-    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity deleteUser(final String uuid, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {

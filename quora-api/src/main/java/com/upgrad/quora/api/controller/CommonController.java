@@ -28,7 +28,7 @@ public class CommonController {
 
         UserEntity user = service.getUserDetails(uuid, authorization);
 
-          UserDetailsResponse userDetailsResponse = new UserDetailsResponse().firstName(user.getFirstName()).lastName(user.getLastName())
+        UserDetailsResponse userDetailsResponse = new UserDetailsResponse().firstName(user.getFirstName()).lastName(user.getLastName())
                 .userName(user.getUserName()).emailAddress(user.getEmail()).contactNumber(user.getContactNumber())
                 .country(user.getCountry()).aboutMe(user.getAboutMe()).dob(user.getDob());
         return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);

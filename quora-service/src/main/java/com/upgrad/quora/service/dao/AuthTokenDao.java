@@ -19,11 +19,11 @@ public class AuthTokenDao {
         try {
             return entityManager.createNamedQuery("CheckAuthToken", UserAuthEntity.class).
                     setParameter("accessToken", authToken).getSingleResult();
-        }
-        catch (NoResultException exc) {
+        } catch (NoResultException exc) {
             return null;
         }
     }
+
     public UserEntity getUserByUuid(final String uuid) {
         try {
             return entityManager.createNamedQuery("UserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();

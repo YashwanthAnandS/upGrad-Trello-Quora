@@ -42,14 +42,12 @@ public class UserController {
         if (alreadyExistingUser != null) { // throw an error if username already exists in DB
             throw new SignUpRestrictedException("SGR-001", "Try any other Username, " +
                     "this Username has already been taken");
-        }
-        else {
+        } else {
             UserEntity userWithSameEmail = userService.getUserByEmail(request.getEmailAddress());
             if (userWithSameEmail != null) { // throw error if email ID has already been used
                 throw new SignUpRestrictedException("SGR-002", "This user has" +
                         " already been registered, try with any other emailId");
-            }
-            else {
+            } else {
                 // create and populate new user entity:
                 UserEntity newUser = new UserEntity();
                 newUser.setUUID(UUID.randomUUID().toString());
@@ -79,7 +77,7 @@ public class UserController {
 
     // sign in user and return JWT token
     @PostMapping(path = "user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SigninResponse> signIn ( @RequestHeader(name = "authorization") final String authorization)
+    public ResponseEntity<SigninResponse> signIn(@RequestHeader(name = "authorization") final String authorization)
             throws AuthenticationFailedException {
         String encodedString = getSignInToken(authorization); // extract base64 encoded username and password
 

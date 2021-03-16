@@ -20,22 +20,6 @@ public class CommonControllerService {
     @Autowired
     CommonDao commonDao;
 
-    // Checks validity of authorization token.
-    @Transactional
-    public void checkAuthToken(String authToken) throws AuthorizationFailedException {
-
-        UserAuthEntity userAuthEntity = authTokenDao.checkAuthToken(authToken);
-        if (userAuthEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else {
-            if (userAuthEntity.getLogoutTime() == null) {
-                return;
-            } else {
-                throw new AuthorizationFailedException("ATHR-002",
-                        "User is signed out.Sign in first to get user details");
-            }
-        }
-    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUserDetails(final String uuid, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {

@@ -5,10 +5,12 @@ import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,20 +32,6 @@ public class AuthTokenService {
             throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
         } else {
             return authTokenDao.signOutUser(userAuthEntity);
-        }
-    }
-
-    // This method checks the auth token to validate if the user is signed in. If auth token is found, it returns the user details matching the auth token.
-    public UserEntity checkAuthentication(String authToken, String methodName) throws AuthorizationFailedException {
-        UserAuthEntity userAuthEntity = authTokenDao.checkAuthToken(authToken);
-        LocalDateTime now = LocalDateTime.now();
-
-        if (userAuthEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", error.get(methodName + ".ATHR-001"));
-        } else if (userAuthEntity.getLogoutTime() != null) {
-            throw new AuthorizationFailedException("ATHR-002", error.get(methodName + ".ATHR-002"));
-        } else {
-            return userAuthEntity.getUser();
         }
     }
 

@@ -22,8 +22,7 @@ public class UserDao {
         try {
             return entityManager.createNamedQuery("UserName", UserEntity.class).
                     setParameter("username", username).getSingleResult();
-        }
-        catch (NoResultException exception) {
+        } catch (NoResultException exception) {
             return null;
         }
 
@@ -33,13 +32,12 @@ public class UserDao {
         try {
             return entityManager.createNamedQuery("UserEmail", UserEntity.class).
                     setParameter("email", email).getSingleResult();
-        }
-        catch (NoResultException exception) {
+        } catch (NoResultException exception) {
             return null;
         }
     }
 
-    public UserAuthEntity  saveLoginInfo(UserAuthEntity userAuthEntity) {
+    public UserAuthEntity saveLoginInfo(UserAuthEntity userAuthEntity) {
         entityManager.persist(userAuthEntity);
         return userAuthEntity;
     }
