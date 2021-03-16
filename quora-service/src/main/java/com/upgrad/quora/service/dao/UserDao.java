@@ -2,6 +2,7 @@ package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -35,6 +36,12 @@ public class UserDao {
         }
         catch (NoResultException exception) {
             return null;
-        }    }
+        }
+    }
+
+    public UserEntity saveLoginInfo(UserAuthEntity userAuthEntity) {
+        entityManager.persist(userAuthEntity);
+        return userAuthEntity.getUser();
+    }
 
 }
