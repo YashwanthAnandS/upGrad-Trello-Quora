@@ -20,7 +20,7 @@ public class CommonControllerService {
     @Autowired
     CommonDao commonDao;
 
-
+    //This service class method fetch user details if user is authenticated
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUserDetails(final String uuid, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {
 

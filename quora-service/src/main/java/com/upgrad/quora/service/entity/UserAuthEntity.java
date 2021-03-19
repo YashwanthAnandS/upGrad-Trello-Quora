@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_auth")
+//create dynamic queries to fetch data from the 'quora' database
 @NamedQueries({@NamedQuery(name = "CheckAuthToken", query = "SELECT a FROM UserAuthEntity a WHERE a.accessToken =:accessToken")})
 public class UserAuthEntity {
-
+    //Define Entity class Fields which mapped into 'quora' database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -37,6 +38,7 @@ public class UserAuthEntity {
 
     }
 
+    //Define parameterized constructor
     public UserAuthEntity(String uuid, int userId, String accessToken, LocalDateTime expiryTime, LocalDateTime loginTime, LocalDateTime logoutTime) {
         this.uuid = uuid;
         this.accessToken = accessToken;
@@ -45,6 +47,7 @@ public class UserAuthEntity {
         LogoutTime = logoutTime;
     }
 
+    //Define Getters and Setters
     public int getId() {
         return id;
     }
@@ -101,6 +104,7 @@ public class UserAuthEntity {
         this.user = user;
     }
 
+    //Define toString method
     @Override
     public String toString() {
         return "UserAuthEntity{" +

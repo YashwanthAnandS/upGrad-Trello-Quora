@@ -13,6 +13,7 @@ public class CommonDao {
     @PersistenceContext
     EntityManager entityManager;
 
+    //this dao method fetch user specific details from the database
     public UserEntity getUserDetails(String uuid) {
         try {
             return entityManager.createNamedQuery("UserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();

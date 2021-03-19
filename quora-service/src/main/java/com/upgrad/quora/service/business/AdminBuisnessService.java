@@ -20,7 +20,7 @@ public class AdminBuisnessService {
     @Autowired
     AdminDao adminDao;
 
-
+    //This service class method delete the specific user by only admin
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity deleteUser(final String uuid, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {
 
