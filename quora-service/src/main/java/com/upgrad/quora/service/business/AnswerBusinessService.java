@@ -50,7 +50,10 @@ public class AnswerBusinessService {
             throw new InvalidQuestionException("QUES-001", "The question entered is invalid");
         }
 
+        UserEntity userEntity = userDao.getUserByUuid(userAuthTokenEntity.getUser().getUUID());
+
         answerEntity.setQuestion(questionEntity);
+        answerEntity.setUser(userEntity);
         return answerDao.createAnswer(answerEntity);
     }
 }
