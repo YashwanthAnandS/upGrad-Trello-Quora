@@ -33,4 +33,24 @@ public class AnswerBusinessService {
 
     @Autowired
     private AnswerDao answerDao;
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AnswerEntity createAnswer(final String questionId, final AnswerEntity answerEntity, final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        QuestionEntity questionEntity = questionDao.getQuestionById(questionId);
+
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if (userAuthTokenEntity.getLogoutTime() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post an answer");
+        }
+
+        if (questionEntity == null) {
+            throw new InvalidQuestionException("QUES-001", "The question entered is invalid");
+        }
+
+        answerEntity.setQuestion(questionEntity);
+        return answerDao.createAnswer(answerEntity);
+    }
 }

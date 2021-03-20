@@ -38,13 +38,61 @@ public class AnswerEntity implements Serializable {
     @NotNull
     private ZonedDateTime date;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "question_id")
-    private QuestionEntity ques;
+    private QuestionEntity question;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getAns() {
+        return ans;
+    }
+
+    public void setAns(String ans) {
+        this.ans = ans;
+    }
+
+    public ZonedDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(ZonedDateTime date) {
+        this.date = date;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public QuestionEntity getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -56,7 +104,6 @@ public class AnswerEntity implements Serializable {
         return new HashCodeBuilder().append(this).hashCode();
     }
 
-    //Define toString method
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
