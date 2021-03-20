@@ -101,10 +101,13 @@ public class QuestionBusinessService {
         if (questionEntity == null) {
             throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
         }
-        if (!questionEntity.getUser().getUUID().equals(userAuthTokenEntity.getUser().getUUID()) || !questionEntity.getUser().getRole().equals("admin")) {
+        if (questionEntity.getUser().getUUID() == userAuthTokenEntity.getUser().getUUID() || questionEntity.getUser().getRole() == "admin") {
+            return  questionDao.deleteSelectedQuestion(questionEntity);
+
+        } else {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }
-        return  questionDao.deleteSelectedQuestion(questionEntity);
+
     }
 
     //This is service class method for fetching questions as per user id
