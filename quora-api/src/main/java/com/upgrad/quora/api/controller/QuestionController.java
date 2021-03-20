@@ -5,6 +5,7 @@ import com.upgrad.quora.service.business.QuestionBusinessService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,6 +61,31 @@ public class QuestionController {
         QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(questionEntity.getUuid()).status("QUESTION EDITED");
 
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
+    }
+
+    //Method for deleting a question using the question id either by the user owning it or an admin
+    @RequestMapping(method = RequestMethod.DELETE, path = "/question/edit/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionEditResponse> deleteQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
+
+        final QuestionEntity questionEntity = questionBusinessService.deleteQuestion(questionId, authorization);
+
+        QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(questionEntity.getUuid()).status("QUESTION DELETED");
+
+        return  new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
+    }
+
+    //Method for fetching question by a user
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+
+        final List<QuestionEntity> questionEntityList = questionBusinessService.getAllQuestionsByUser(userId, authorization);
+
+        List<QuestionDetailsResponse> questionsList = new ArrayList<QuestionDetailsResponse>();
+
+        for (int i = 0; i < questionEntityList.size(); i++) {
+            questionsList.add(new QuestionDetailsResponse().id(questionEntityList.get(i).getUuid()).content(questionEntityList.get(i).getContent()));
+        }
+        return new ResponseEntity<List<QuestionDetailsResponse>>(questionsList, HttpStatus.OK);
     }
 
 }

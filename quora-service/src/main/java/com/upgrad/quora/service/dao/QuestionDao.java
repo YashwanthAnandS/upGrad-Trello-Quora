@@ -40,6 +40,16 @@ public class QuestionDao {
         return questionEntity;
     }
 
+    //This DAO method deletes a question in the database
+    public QuestionEntity deleteSelectedQuestion(QuestionEntity questionEntity) {
+        entityManager.remove(questionEntity);
+        return questionEntity;
+    }
+
+    //This DAO method fetches all the questions as per the user id
+    public List<QuestionEntity> getAllQuestionsByUser(final String accessToken, final String userId) {
+        return entityManager.createNamedQuery("allQuestionsByUserId", QuestionEntity.class).setParameter("user_id", userId).getResultList();
+    }
 }
 
 
