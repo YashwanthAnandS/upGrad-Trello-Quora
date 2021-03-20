@@ -35,7 +35,7 @@ public class AnswerBusinessService {
     private AnswerDao answerDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public AnswerEntity createAnswer(final String questionId, final AnswerEntity answerEntity, final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+    public AnswerEntity createAnswer(final AnswerEntity answerEntity, final String accessToken, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
         QuestionEntity questionEntity = questionDao.getQuestionById(questionId);

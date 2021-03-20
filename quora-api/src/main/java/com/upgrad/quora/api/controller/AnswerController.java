@@ -25,13 +25,16 @@ public class AnswerController {
     private AnswerBusinessService answerBusinessService;
 
 
-    /*public ResponseEntity<AnswerResponse> createAnswer(@PathVariable("questionId") final String questionId, final AnswerRequest answerRequest, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
+    public ResponseEntity<AnswerResponse> createAnswer(@PathVariable("questionId") final String questionId, final AnswerRequest answerRequest, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
         AnswerEntity answerEntity = new AnswerEntity();
         answerEntity.setUuid(UUID.randomUUID().toString());
         answerEntity.setAns(answerRequest.getAnswer());
         answerEntity.setDate(ZonedDateTime.now());
 
-        final AnswerEntity createdAnswerEntity = answerBusinessService.
-    }*/
+        final AnswerEntity createdAnswerEntity = answerBusinessService.createAnswer(answerEntity, authorization, questionId);
+        AnswerResponse answerResponse = new AnswerResponse().id(createdAnswerEntity.getUuid()).status("ANSWER CREATED");
+
+        return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
 }
