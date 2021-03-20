@@ -34,6 +34,7 @@ public class AnswerBusinessService {
     @Autowired
     private AnswerDao answerDao;
 
+    //This service method creates answer for the entered questionId
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity createAnswer(final AnswerEntity answerEntity, final String accessToken, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
