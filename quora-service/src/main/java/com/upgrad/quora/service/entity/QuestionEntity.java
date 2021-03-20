@@ -17,6 +17,7 @@ import java.time.ZonedDateTime;
 @NamedQueries({
         @NamedQuery(name = "allQuestions", query = "select q from QuestionEntity q"),
         @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid=:uuid"),
+        @NamedQuery(name = "allQuestionsByUserId", query = "select q from QuestionEntity q,UserEntity u where q.user = u.Id AND u.UUID =:uuid")
 })
 public class QuestionEntity implements Serializable {
 
@@ -38,7 +39,7 @@ public class QuestionEntity implements Serializable {
     @NotNull
     private ZonedDateTime date;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
