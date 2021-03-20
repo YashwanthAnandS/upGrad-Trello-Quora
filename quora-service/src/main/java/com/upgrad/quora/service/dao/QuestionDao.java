@@ -47,8 +47,8 @@ public class QuestionDao {
     }
 
     //This DAO method fetches all the questions as per the user id
-    public List<QuestionEntity> getAllQuestionsByUser(final String accessToken, final String userId) {
-        return entityManager.createNamedQuery("allQuestionsByUserId", QuestionEntity.class).setParameter("user_id", userId).getResultList();
+    public List<QuestionEntity> getAllQuestionsByUser(final String accessToken, final String uuid) {
+        return entityManager.createNamedQuery("allQuestionsByUserId", QuestionEntity.class).setParameter("uuid", uuid).getResultList();
     }
 }
 
