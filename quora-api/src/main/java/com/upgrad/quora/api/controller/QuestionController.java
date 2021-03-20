@@ -64,7 +64,7 @@ public class QuestionController {
     }
 
     //Method for deleting a question using the question id either by the user owning it or an admin
-    @RequestMapping(method = RequestMethod.DELETE, path = "/question/edit/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> deleteQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
         final QuestionEntity questionEntity = questionBusinessService.deleteQuestion(questionId, authorization);
