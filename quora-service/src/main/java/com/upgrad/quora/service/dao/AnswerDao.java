@@ -33,4 +33,9 @@ public class AnswerDao {
         entityManager.merge(answerEntity);
         return answerEntity;
     }
+
+    public AnswerEntity deleteSelectedAnswer(AnswerEntity answerEntity) {
+        entityManager.remove(answerEntity);
+        return answerEntity;
+    }
 }

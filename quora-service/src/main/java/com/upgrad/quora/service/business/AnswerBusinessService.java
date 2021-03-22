@@ -83,4 +83,25 @@ public class AnswerBusinessService {
         return answerDao.editAnswer(answerEntity);
 
     }
+
+    public AnswerEntity deleteAnswer(String answerId, String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        AnswerEntity answerEntity = answerDao.getAnswerById(answerId);
+
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if (userAuthTokenEntity.getLogoutTime() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete an answer");
+        }
+
+        if (answerEntity == null) {
+            throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
+        }
+        if (answerEntity.getUser().getUUID() == userAuthTokenEntity.getUser().getUUID() || answerEntity.getUser().getRole() == "admin") {
+            return  answerDao.deleteSelectedAnswer(answerEntity);
+
+        } else {
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
+        }
+    }
 }
