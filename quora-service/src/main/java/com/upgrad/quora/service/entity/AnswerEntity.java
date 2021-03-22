@@ -15,7 +15,8 @@ import java.time.ZonedDateTime;
 @Table(name = "answer")
 //create dynamic queries to fetch data from the 'quora' database
 @NamedQueries({
-        @NamedQuery(name = "allAnswers", query = "select a from AnswerEntity a")
+        @NamedQuery(name = "allAnswers", query = "select a from AnswerEntity a"),
+        @NamedQuery(name = "answerByUuid", query = "select a from AnswerEntity a where a.uuid=:uuid"),
 })
 
 public class AnswerEntity implements Serializable {

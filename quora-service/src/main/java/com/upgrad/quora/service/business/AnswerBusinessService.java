@@ -8,10 +8,7 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.entity.AnswerEntity;
-import com.upgrad.quora.service.exception.AuthorizationFailedException;
-import com.upgrad.quora.service.exception.InvalidQuestionException;
-import com.upgrad.quora.service.exception.UserNotFoundException;
-import com.upgrad.quora.service.exception.AnswerNotFoundException;
+import com.upgrad.quora.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -56,5 +53,34 @@ public class AnswerBusinessService {
         answerEntity.setQuestion(questionEntity);
         answerEntity.setUser(userEntity);
         return answerDao.createAnswer(answerEntity);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AnswerEntity editAnswer(String answer, String answerId, String accessToken) throws AuthorizationFailedException,InvalidAnswerException {
+
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+
+        AnswerEntity answerEntity = answerDao.getAnswerById(answerId);
+
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+        else if (userAuthTokenEntity.getLogoutTime() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit an answer");
+        }
+
+        if (answerEntity.getUser().getUUID() != userAuthTokenEntity.getUser().getUUID()) {
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
+        }
+
+        if (answerEntity == null) {
+            throw new InvalidAnswerException("ANS-001", "Entered answer uuid does not exist");
+        }
+
+
+        answerEntity.setAns(answer);
+
+        return answerDao.editAnswer(answerEntity);
+
     }
 }
