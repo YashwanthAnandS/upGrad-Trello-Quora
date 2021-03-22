@@ -55,6 +55,7 @@ public class AnswerBusinessService {
         return answerDao.createAnswer(answerEntity);
     }
 
+    //Service Method to edit an answer using AnswerId
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity editAnswer(String answer, String answerId, String accessToken) throws AuthorizationFailedException,InvalidAnswerException {
 
@@ -83,6 +84,8 @@ public class AnswerBusinessService {
 
     }
 
+    //Service method to delete answer for the corressponding question
+    @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity deleteAnswer(String answerId, String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
         AnswerEntity answerEntity = answerDao.getAnswerById(answerId);
@@ -104,6 +107,8 @@ public class AnswerBusinessService {
         }
     }
 
+
+    //Service Method to get all Answers by QuestionID
     @Transactional(propagation = Propagation.REQUIRED)
     public List<AnswerEntity> getAllAnswersByQuestion(String questionId, String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
