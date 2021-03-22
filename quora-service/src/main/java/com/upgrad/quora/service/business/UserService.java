@@ -36,6 +36,7 @@ public class UserService {
     }
 
     //This service class method sign up specific user
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signupUser(UserEntity user) {
         String[] array = passwordCryptographyProvider.encrypt(user.getPassword());
         user.setPassword(array[1]);
