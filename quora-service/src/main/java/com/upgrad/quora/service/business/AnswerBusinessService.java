@@ -69,14 +69,13 @@ public class AnswerBusinessService {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit an answer");
         }
 
-        if (answerEntity.getUser().getUUID() != userAuthTokenEntity.getUser().getUUID()) {
-            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
-        }
-
         if (answerEntity == null) {
             throw new InvalidAnswerException("ANS-001", "Entered answer uuid does not exist");
         }
 
+        if (answerEntity.getUser().getUUID() != userAuthTokenEntity.getUser().getUUID()) {
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
+        }
 
         answerEntity.setAns(answer);
 
