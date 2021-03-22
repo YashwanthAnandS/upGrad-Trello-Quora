@@ -103,4 +103,23 @@ public class AnswerBusinessService {
             throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
         }
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AnswerEntity> getAllAnswersByQuestion(String questionId, String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        QuestionEntity questionEntity = questionDao.getQuestionById(questionId);
+        UserEntity userEntity = questionEntity.getUser();
+
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if (userAuthTokenEntity.getLogoutTime() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get the answers");
+        }
+
+        if (userEntity == null) {
+            throw new InvalidQuestionException("QUES-001", "The question with entered uuid whose details are to be seen does not exist");
+        }
+        return answerDao.getAllAnswersByQuestion(accessToken, questionId);
+    }
+
 }

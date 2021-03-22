@@ -38,4 +38,8 @@ public class AnswerDao {
         entityManager.remove(answerEntity);
         return answerEntity;
     }
+
+    public List<AnswerEntity> getAllAnswersByQuestion(String accessToken,final String uuid) {
+        return entityManager.createNamedQuery("allAnswersByQuestion", AnswerEntity.class).setParameter("uuid", uuid).getResultList();
+    }
 }

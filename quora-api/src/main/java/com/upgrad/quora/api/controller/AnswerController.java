@@ -58,5 +58,20 @@ public class AnswerController {
         return  new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
+
+        final List<AnswerEntity> answerEntityList = answerBusinessService.getAllAnswersByQuestion(questionId, authorization);
+
+        List<AnswerDetailsResponse> answerDetailsResponseList = new ArrayList<>();
+
+        for (int i = 0; i < answerEntityList.size(); i++) {
+            answerDetailsResponseList.add(new AnswerDetailsResponse()
+                    .id(answerEntityList.get(i).getUuid())
+                    .answerContent(answerEntityList.get(i).getAns()));
+        }
+        return new ResponseEntity<>(answerDetailsResponseList, HttpStatus.OK);
+    }
+
 
 }
