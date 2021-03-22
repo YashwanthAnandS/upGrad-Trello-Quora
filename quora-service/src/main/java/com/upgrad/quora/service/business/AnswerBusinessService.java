@@ -113,6 +113,9 @@ public class AnswerBusinessService {
     public List<AnswerEntity> getAllAnswersByQuestion(String questionId, String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
         QuestionEntity questionEntity = questionDao.getQuestionById(questionId);
+        if(questionEntity==null){
+            throw new InvalidQuestionException("QUES-001","Entered question uuid does not exist");
+        }
         UserEntity userEntity = questionEntity.getUser();
 
         if (userAuthTokenEntity == null) {
