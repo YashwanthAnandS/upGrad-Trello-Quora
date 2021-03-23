@@ -57,10 +57,9 @@ public class AnswerBusinessService {
 
     //Service Method to edit an answer using AnswerId
     @Transactional(propagation = Propagation.REQUIRED)
-    public AnswerEntity editAnswer(String answer, String answerId, String accessToken) throws AuthorizationFailedException,InvalidAnswerException {
+    public AnswerEntity editAnswer(String answer, String answerId, String accessToken) throws AuthorizationFailedException,AnswerNotFoundException {
 
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
-
         AnswerEntity answerEntity = answerDao.getAnswerById(answerId);
 
         if (userAuthTokenEntity == null) {
@@ -71,7 +70,7 @@ public class AnswerBusinessService {
         }
 
         if (answerEntity == null) {
-            throw new InvalidAnswerException("ANS-001", "Entered answer uuid does not exist");
+            throw new AnswerNotFoundException("ANS-001","Entered answer uuid does not exist");
         }
 
         if (answerEntity.getUser().getUUID() != userAuthTokenEntity.getUser().getUUID()) {
@@ -84,7 +83,7 @@ public class AnswerBusinessService {
 
     }
 
-    //Service method to delete answer for the corressponding question
+    //Service method to delete answer for the corresponding question
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity deleteAnswer(String answerId, String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
         UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
@@ -93,7 +92,7 @@ public class AnswerBusinessService {
         if (userAuthTokenEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         } else if (userAuthTokenEntity.getLogoutTime() != null) {
-            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete an answer");
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit an answer");
         }
 
         if (answerEntity == null) {
@@ -103,7 +102,7 @@ public class AnswerBusinessService {
             return  answerDao.deleteSelectedAnswer(answerEntity);
 
         } else {
-            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
         }
     }
 
