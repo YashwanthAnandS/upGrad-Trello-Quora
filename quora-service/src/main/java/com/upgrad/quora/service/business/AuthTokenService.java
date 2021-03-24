@@ -6,6 +6,7 @@ import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -15,7 +16,7 @@ public class AuthTokenService {
 
 
     // This method checks existing auth token, and then signs out the user if the auth token is found. If the auth token is not found, it displays an error message.
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity checkAuthToken(String authToken) throws SignOutRestrictedException {
 
         UserAuthEntity userAuthEntity = authTokenDao.checkAuthToken(authToken);

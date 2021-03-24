@@ -6,6 +6,7 @@ import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -21,20 +22,21 @@ public class UserService {
     PasswordCryptographyProvider passwordCryptographyProvider;
 
     //This service class method fetch username and call dao method to fetch username from the database
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUserByUsername(String username) {
         UserEntity userEntity = userDao.getUserByUsername(username);
         return userEntity;
     }
 
     //This service class method fetch emailId and call dao method to fetch emailId from the database
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUserByEmail(String email) {
         UserEntity userEntity = userDao.getUserByEmail(email);
         return userEntity;
     }
 
     //This service class method sign up specific user
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signupUser(UserEntity user) {
         String[] array = passwordCryptographyProvider.encrypt(user.getPassword());
         user.setPassword(array[1]);
@@ -54,7 +56,7 @@ public class UserService {
     }
 
     //This service class method save specific users login information and generate authentication token for authorization
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity saveLoginInfo(UserAuthEntity userAuthEntity, String password) {
         JwtTokenProvider tokenProvider = new JwtTokenProvider(password);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -74,6 +76,7 @@ public class UserService {
     }
 
     //This service class method fetch specific user uuid
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUserByUuid(String uuid) throws UserNotFoundException {
         UserEntity user = userDao.getUserByUuid(uuid);
         if (user == null) {
