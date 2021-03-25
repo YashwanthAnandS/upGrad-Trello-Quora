@@ -92,7 +92,7 @@ public class AnswerBusinessService {
         if (userAuthTokenEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         } else if (userAuthTokenEntity.getLogoutTime() != null) {
-            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit an answer");
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete an answer");
         }
 
         if (answerEntity == null) {
@@ -102,7 +102,7 @@ public class AnswerBusinessService {
             return  answerDao.deleteSelectedAnswer(answerEntity);
 
         } else {
-            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
         }
     }
 
