@@ -71,7 +71,7 @@ public class QuestionController {
 
         QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(questionEntity.getUuid()).status("QUESTION DELETED");
 
-        return  new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
 
     //Method for fetching question by a user
