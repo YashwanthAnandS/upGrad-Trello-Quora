@@ -3,8 +3,9 @@ package com.upgrad.quora.api.controller;
 import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.entity.AnswerEntity;
-import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.exception.*;
+import com.upgrad.quora.service.exception.AnswerNotFoundException;
+import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -57,7 +58,7 @@ public class AnswerController {
 
         AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerEntity.getUuid()).status("ANSWER DELETED");
 
-        return  new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
+        return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
     }
 
     //GET method to get all Answers Corresponding to a question
@@ -71,7 +72,7 @@ public class AnswerController {
         for (int i = 0; i < answerEntityList.size(); i++) {
             answerDetailsResponseList.add(new AnswerDetailsResponse()
                     .id(answerEntityList.get(i).getUuid())
-                    .answerContent(answerEntityList.get(i).getAns()));
+                    .answerContent(answerEntityList.get(i).getAns()).questionContent(answerEntityList.get(i).getQuestion().getContent()));
         }
         return new ResponseEntity<>(answerDetailsResponseList, HttpStatus.OK);
     }

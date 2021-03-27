@@ -1,7 +1,6 @@
 package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.UserDetailsResponse;
-import com.upgrad.quora.service.business.AuthTokenService;
 import com.upgrad.quora.service.business.CommonControllerService;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
@@ -15,12 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 public class CommonController {
-    @Autowired
-    CommonControllerService service;
 
     @Autowired
-    AuthTokenService authTokenService;
-
+    private CommonControllerService service;
 
     // this method fetches user details for the given user UUID
     @RequestMapping(path = "userprofile/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

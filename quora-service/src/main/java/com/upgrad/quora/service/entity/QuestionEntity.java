@@ -39,7 +39,7 @@ public class QuestionEntity implements Serializable {
     @NotNull
     private ZonedDateTime date;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
