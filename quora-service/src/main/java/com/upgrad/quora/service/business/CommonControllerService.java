@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommonControllerService {
 
     @Autowired
-    AuthTokenDao authTokenDao;
+    private AuthTokenDao authTokenDao;
 
     //This service class method fetch user details if user is authenticated
     @Transactional(propagation = Propagation.REQUIRED)

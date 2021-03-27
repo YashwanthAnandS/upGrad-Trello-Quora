@@ -20,13 +20,13 @@ import java.util.UUID;
 public class UserService {
 
     @Autowired
-    UserDao userDao;
+   private  UserDao userDao;
 
     @Autowired
-    AuthTokenDao authTokenDao;
+    private AuthTokenDao authTokenDao;
 
     @Autowired
-    PasswordCryptographyProvider passwordCryptographyProvider;
+    private PasswordCryptographyProvider passwordCryptographyProvider;
 
     //This service class method fetch username and call dao method to fetch username from the database
     @Transactional(propagation = Propagation.REQUIRED)

@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminBuisnessService {
 
     @Autowired
-    AuthTokenDao authTokenDao;
-
+   private AuthTokenDao authTokenDao;
 
     //This service class method delete the specific user by only admin
     @Transactional(propagation = Propagation.REQUIRED)
