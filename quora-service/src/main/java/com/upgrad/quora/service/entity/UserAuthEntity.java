@@ -1,6 +1,8 @@
 package com.upgrad.quora.service.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,14 +17,17 @@ public class UserAuthEntity {
     private int id;
 
     @Column(name = "uuid")
+    @Size(max = 200)
     private String uuid;
 
     // user can have multiple login sessions
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Column(name = "access_token")
+    @NotNull
+    @Size(max = 500)
     private String accessToken;
 
     @Column(name = "expires_at")

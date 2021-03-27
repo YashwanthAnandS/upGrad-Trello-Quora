@@ -2,7 +2,6 @@ package com.upgrad.quora.service.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 @Table(name = "USERS")
@@ -69,8 +68,8 @@ public class UserEntity {
     @Size(max = 30)
     private String contactNumber;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<UserAuthEntity> authTokens;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+//    private List<UserAuthEntity> authTokens;
 
 
     //Define Default constructor
@@ -198,13 +197,13 @@ public class UserEntity {
         this.contactNumber = contactNumber;
     }
 
-    public List<UserAuthEntity> getAuthTokens() {
-        return authTokens;
-    }
-
-    public void setAuthTokens(List<UserAuthEntity> authTokens) {
-        this.authTokens = authTokens;
-    }
+//    public List<UserAuthEntity> getAuthTokens() {
+//        return authTokens;
+//    }
+//
+//    public void setAuthTokens(List<UserAuthEntity> authTokens) {
+//        this.authTokens = authTokens;
+//    }
 
 
     @Override
