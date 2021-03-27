@@ -68,15 +68,10 @@ public class UserEntity {
     @Size(max = 30)
     private String contactNumber;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-//    private List<UserAuthEntity> authTokens;
-
-
     //Define Default constructor
     public UserEntity() {
 
     }
-
 
     //Define parameterized constructor
     public UserEntity(@Size(max = 30) String firstName, @Size(max = 30) String lastName, @Size(max = 30) String userName, @Size(max = 50) String email, @Size(max = 255) String password, @Size(max = 30) String country, @Size(max = 50) String aboutMe, @Size(max = 30) String dob, @Size(max = 30) String role, @Size(max = 30) String contactNumber) {
@@ -196,14 +191,6 @@ public class UserEntity {
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
-
-//    public List<UserAuthEntity> getAuthTokens() {
-//        return authTokens;
-//    }
-//
-//    public void setAuthTokens(List<UserAuthEntity> authTokens) {
-//        this.authTokens = authTokens;
-//    }
 
 
     @Override

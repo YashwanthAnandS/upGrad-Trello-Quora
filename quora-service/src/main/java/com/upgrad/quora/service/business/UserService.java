@@ -1,22 +1,29 @@
 package com.upgrad.quora.service.business;
 
+import com.upgrad.quora.service.dao.AuthTokenDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
+import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
+import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    AuthTokenDao authTokenDao;
 
     @Autowired
     PasswordCryptographyProvider passwordCryptographyProvider;
@@ -37,7 +44,16 @@ public class UserService {
 
     //This service class method sign up specific user
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserEntity signupUser(UserEntity user) {
+    public UserEntity signupUser(UserEntity user) throws SignUpRestrictedException {
+
+        if (userDao.getUserByEmail(user.getEmail()) != null) {
+            throw new SignUpRestrictedException("SGR-002", "This user has already been registered, try with any other emailId");
+        }
+
+        if (userDao.getUserByUsername(user.getUserName()) != null) {
+            throw new SignUpRestrictedException("SGR-001", "Try any other Username, this Username has already been taken");
+        }
+
         String[] array = passwordCryptographyProvider.encrypt(user.getPassword());
         user.setPassword(array[1]);
         user.setSalt(array[0]);
@@ -45,35 +61,42 @@ public class UserService {
         return user;
     }
 
-    //This service class method validates a particular password
-    public boolean isPasswordCorrect(String password, UserEntity user) {
-        String encryptedPassword = passwordCryptographyProvider.encrypt(password, user.getSalt());
-        if (user.getPassword().equals(encryptedPassword)) {
-            return true;
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserAuthEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
+        UserEntity userEntity = userDao.getUserByUsername(username);
+        if (userEntity == null) {
+            throw new AuthenticationFailedException("ATH-001", "This username does not exist");
+        }
+
+        final String encryptedPassword = passwordCryptographyProvider.encrypt(password, userEntity.getSalt());  //encrypt password and salt
+        if (encryptedPassword.equals(userEntity.getPassword())) {
+            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);// extracts the token from the JWT token string
+            UserAuthEntity userAuthTokenEntity = new UserAuthEntity(); //set user Authentication details
+            userAuthTokenEntity.setUser(userEntity);
+            userAuthTokenEntity.setUuid(UUID.randomUUID().toString());
+            final ZonedDateTime now = ZonedDateTime.now();
+            final ZonedDateTime expiresAt = now.plusHours(8);
+            userAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUUID(), now, expiresAt));
+            userAuthTokenEntity.setLoginTime(now); //set login time
+            userAuthTokenEntity.setExpiryTime(expiresAt); // set expires time
+            userDao.saveLoginInfo(userAuthTokenEntity);
+            return userAuthTokenEntity;
         } else {
-            return false;
+            throw new AuthenticationFailedException("ATH-002", "Password failed");
         }
     }
 
-    //This service class method save specific users login information and generate authentication token for authorization
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserAuthEntity saveLoginInfo(UserAuthEntity userAuthEntity, String password) {
-        JwtTokenProvider tokenProvider = new JwtTokenProvider(password);
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime expiryTime = currentTime.plusHours(8);
-
-        ZonedDateTime currentZonedTime = ZonedDateTime.now();
-        ZonedDateTime expiryZonedTime = currentZonedTime.plusHours(8);
-
-        String authToken = tokenProvider.generateToken(userAuthEntity.getUuid(), currentZonedTime, expiryZonedTime);
-
-        userAuthEntity.setAccessToken(authToken);
-        userAuthEntity.setExpiryTime(expiryTime);
-        userAuthEntity.setLoginTime(currentTime);
-
-        return userDao.saveLoginInfo(userAuthEntity);
-
+    public UserAuthEntity signOut(final String accessToken) throws SignOutRestrictedException {
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken); // fetch access token and check whether auth token is null or not
+        if (userAuthTokenEntity == null) {
+            throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
+        } else {
+            userAuthTokenEntity.setLogoutTime(ZonedDateTime.now());
+            return userDao.updateUser(userAuthTokenEntity);
+        }
     }
+
 
     //This service class method fetch specific user uuid
     @Transactional(propagation = Propagation.REQUIRED)

@@ -1,6 +1,5 @@
 package com.upgrad.quora.service.business;
 
-import com.upgrad.quora.service.dao.AdminDao;
 import com.upgrad.quora.service.dao.AuthTokenDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
@@ -17,14 +16,12 @@ public class AdminBuisnessService {
     @Autowired
     AuthTokenDao authTokenDao;
 
-    @Autowired
-    AdminDao adminDao;
 
     //This service class method delete the specific user by only admin
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity deleteUser(final String uuid, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {
 
-        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken); // fetch accesstoken and check whether auth token is null or not
 
         UserEntity user = authTokenDao.getUserByUuid(uuid);
 

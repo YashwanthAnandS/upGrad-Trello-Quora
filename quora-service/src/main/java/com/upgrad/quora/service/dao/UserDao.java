@@ -10,8 +10,9 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserDao {
+
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     //this dao method sign up specific user in the database
     public UserEntity signupUser(UserEntity userEntity) {
@@ -44,6 +45,11 @@ public class UserDao {
     public UserAuthEntity saveLoginInfo(UserAuthEntity userAuthEntity) {
         entityManager.persist(userAuthEntity);
         return userAuthEntity;
+    }
+
+    public UserAuthEntity updateUser(UserAuthEntity userAuthTokenEntity) {
+        entityManager.merge(userAuthTokenEntity);
+        return userAuthTokenEntity;
     }
 
     //this dao method get specific users uuid from the database

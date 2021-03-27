@@ -2,7 +2,6 @@ package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.UserDeleteResponse;
 import com.upgrad.quora.service.business.AdminBuisnessService;
-import com.upgrad.quora.service.business.AuthTokenService;
 import com.upgrad.quora.service.business.UserService;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
@@ -18,13 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    AdminBuisnessService adminBuisnessService;
+    private AdminBuisnessService adminBuisnessService;
 
-    @Autowired
-    AuthTokenService authTokenService;
 
     // this method deletes an existing user
     @RequestMapping(method = RequestMethod.DELETE, path = "/admin/user/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

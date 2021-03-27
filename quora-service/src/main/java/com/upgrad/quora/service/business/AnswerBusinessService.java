@@ -37,7 +37,7 @@ public class AnswerBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity createAnswer(final AnswerEntity answerEntity, final String accessToken, final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
-        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken); // fetch accesstoken and check whether auth token is null or not
         QuestionEntity questionEntity = questionDao.getQuestionById(questionId);
 
         if (userAuthTokenEntity == null) {
@@ -61,7 +61,7 @@ public class AnswerBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity editAnswer(String answer, String answerId, String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
 
-        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken);
+        UserAuthEntity userAuthTokenEntity = authTokenDao.checkAuthToken(accessToken); // fetch accesstoken and check whether auth token is null or not
         AnswerEntity answerEntity = answerDao.getAnswerById(answerId);
 
         if (userAuthTokenEntity == null) {
