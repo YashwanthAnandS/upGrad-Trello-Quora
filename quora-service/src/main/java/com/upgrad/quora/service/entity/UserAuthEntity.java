@@ -1,43 +1,50 @@
 package com.upgrad.quora.service.entity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "user_auth")
+//create dynamic queries to fetch data from the 'quora' database
 @NamedQueries({@NamedQuery(name = "CheckAuthToken", query = "SELECT a FROM UserAuthEntity a WHERE a.accessToken =:accessToken")})
 public class UserAuthEntity {
-
+    //Define Entity class Fields which mapped into 'quora' database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
     @Column(name = "uuid")
+    @Size(max = 200)
     private String uuid;
 
     // user can have multiple login sessions
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Column(name = "access_token")
+    @NotNull
+    @Size(max = 500)
     private String accessToken;
 
     @Column(name = "expires_at")
-    private LocalDateTime expiryTime;
+    private ZonedDateTime expiryTime;
 
     @Column(name = "login_at")
-    private LocalDateTime loginTime;
+    private ZonedDateTime loginTime;
 
     @Column(name = "logout_at")
-    private LocalDateTime LogoutTime;
+    private ZonedDateTime LogoutTime;
 
     public UserAuthEntity() {
 
     }
 
-    public UserAuthEntity(String uuid, int userId, String accessToken, LocalDateTime expiryTime, LocalDateTime loginTime, LocalDateTime logoutTime) {
+    //Define parameterized constructor
+    public UserAuthEntity(String uuid, int userId, String accessToken, ZonedDateTime expiryTime, ZonedDateTime loginTime, ZonedDateTime logoutTime) {
         this.uuid = uuid;
         this.accessToken = accessToken;
         this.expiryTime = expiryTime;
@@ -45,6 +52,7 @@ public class UserAuthEntity {
         LogoutTime = logoutTime;
     }
 
+    //Define Getters and Setters
     public int getId() {
         return id;
     }
@@ -69,27 +77,27 @@ public class UserAuthEntity {
         this.accessToken = accessToken;
     }
 
-    public LocalDateTime getExpiryTime() {
+    public ZonedDateTime getExpiryTime() {
         return expiryTime;
     }
 
-    public void setExpiryTime(LocalDateTime expiryTime) {
+    public void setExpiryTime(ZonedDateTime expiryTime) {
         this.expiryTime = expiryTime;
     }
 
-    public LocalDateTime getLoginTime() {
+    public ZonedDateTime getLoginTime() {
         return loginTime;
     }
 
-    public void setLoginTime(LocalDateTime loginTime) {
+    public void setLoginTime(ZonedDateTime loginTime) {
         this.loginTime = loginTime;
     }
 
-    public LocalDateTime getLogoutTime() {
+    public ZonedDateTime getLogoutTime() {
         return LogoutTime;
     }
 
-    public void setLogoutTime(LocalDateTime logoutTime) {
+    public void setLogoutTime(ZonedDateTime logoutTime) {
         LogoutTime = logoutTime;
     }
 
@@ -101,6 +109,7 @@ public class UserAuthEntity {
         this.user = user;
     }
 
+    //Define toString method
     @Override
     public String toString() {
         return "UserAuthEntity{" +
